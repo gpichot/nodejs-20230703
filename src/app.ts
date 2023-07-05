@@ -4,6 +4,7 @@ import express, { NextFunction, Request, Response } from "express";
 import gameBasicRouter from "./routers/gameBasicRouter";
 import { BadRequest } from "./errors";
 import { fibonacci } from "./math";
+import { Board } from "./tictactoe.utils";
 
 const prisma = new PrismaClient();
 
@@ -19,37 +20,12 @@ app.get("/users", async (req, res) => {
   res.json(users);
 });
 
-type Board = string[][];
 const board: Board = [
   ["", "", ""],
   ["", "", ""],
   ["", "", ""],
 ];
 let currentPlayer = "X";
-
-function getWinnerIfAny(board: Board) {
-  // Check rows
-  for (let i = 0; i < 3; i += 1) {
-    if (board[0][i] === board[1][i] && board[1][i] === board[2][i]) {
-      return board[0][i];
-    }
-  }
-  // Check columns
-  for (let i = 0; i < 3; i += 1) {
-    if (board[i][0] === board[i][1] && board[i][1] === board[i][2]) {
-      return board[i][0];
-    }
-  }
-
-  // Check diagonals
-  if (board[0][0] === board[1][1] && board[1][1] === board[2][2]) {
-    return board[0][0];
-  }
-  if (board[2][0] === board[1][1] && board[1][1] === board[0][2]) {
-    return board[2][0];
-  }
-  return null;
-}
 
 app.get("/", (req, res) => {
   res.send("Welcome to Tic Tac Toe");
