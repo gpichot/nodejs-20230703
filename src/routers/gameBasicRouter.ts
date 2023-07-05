@@ -12,7 +12,7 @@ const board = {
   current: createNewBoard(),
 };
 
-const validateMoveBody = validateRequestBody(
+export const validateMoveBody = validateRequestBody(
   z.object({
     x: z.number().min(0).max(2),
     y: z.number().min(0).max(2),
