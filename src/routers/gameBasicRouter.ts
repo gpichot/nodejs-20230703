@@ -3,65 +3,10 @@ import { z } from "zod";
 import { validateRequestBody } from "zod-express-middleware";
 
 import { BadRequest } from "../errors";
+import { createNewBoard, getNextPlayer, hasWinner } from "../tictactoe.utils";
 
 const router = express.Router();
 export default router;
-
-export type Player = "X" | "O" | "";
-export type Board = Player[][];
-
-function createNewBoard(): Board {
-  return [
-    ["", "", ""],
-    ["", "", ""],
-    ["", "", ""],
-  ];
-}
-
-function getNextPlayer(board: Board) {
-  const flattenedBoard = board.flat();
-  const xCount = flattenedBoard.filter((cell) => cell === "X").length;
-  const oCount = flattenedBoard.filter((cell) => cell === "O").length;
-
-  return xCount === oCount ? "X" : "O";
-}
-
-function hasWinner(board: Board): Player {
-  // Check rows
-  for (const row of board) {
-    if (row[0] === row[1] && row[1] === row[2] && row[0] !== "") {
-      return row[0];
-    }
-  }
-
-  // Check columns
-  for (let x = 0; x < 3; x++) {
-    if (
-      board[0][x] === board[1][x] &&
-      board[1][x] === board[2][x] &&
-      board[0][x] !== ""
-    ) {
-      return board[0][x];
-    }
-  }
-
-  // Check diagonals
-  if (
-    board[0][0] === board[1][1] &&
-    board[1][1] === board[2][2] &&
-    board[0][0] !== ""
-  ) {
-    return board[0][0];
-  }
-  if (
-    board[0][2] === board[1][1] &&
-    board[1][1] === board[2][0] &&
-    board[0][2] !== ""
-  ) {
-    return board[0][2];
-  }
-  return null;
-}
 
 const board = {
   current: createNewBoard(),
